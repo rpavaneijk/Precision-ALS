@@ -14,7 +14,8 @@ ext_normalize_names <- function(xs) {
                 str_replace_all("<", "lt_") |>
                 str_replace_all(">", "gt_") |>
                 str_replace_all("[^A-Za-z0-9]+", "_") |>
-                str_replace_all("(^_)|(_$)", "")
+                str_replace_all("(^_)|(_$)", "") |>
+                str_replace_all("^([^A-Za-z])", "x\\1")
         })
 }
 
