@@ -73,6 +73,8 @@ ext_main <- ext_load(
     ext_normalize_names() |>
     rename_with(\(x) str_replace(x, "non_invasive_venti(la|al)tion$", "niv")) |>
     rename_with(\(x) str_replace(x, "rilzole", "riluzole")) |>
+    rename_with(\(x) str_replace(x, "_if_alive$", "")) |>
+    rename(age_at_23h_niv = "age_at_gt_23h_niv") |>
     mutate(
         across(ends_with("_tested"), ext_parse_boolean),
         across(c(gastrostomy, niv, tracheostomy), ext_parse_boolean),
@@ -91,6 +93,33 @@ ext_main <- ext_load(
                 str_extract(year_year_and_month_of_birth, "\\d{4}-(\\d{1,2})", group = 1),
                 1
             )
+        ),
+        across(starts_with("date_of_") & -date_of_birth,
+            \(x) (x - date_of_birth) / dyears(1),
+            .names = "calculated_age_from_{.col}"
+        ),
+        # BUG: for some reason this doesn't work...
+        #
+        # across(starts_with("age_at_"), \(x) {
+        #    event <- str_extract(cur_column(), "age_at_([a-z0-9_]+)", group = 1)
+        #    calculated_age_col <- str_glue("calculated_age_from_date_of_{event}")
+        #    coalesce(x, .data[[calculated_age_col]])
+        # }, .names = "coalesced_{.col}"),
+        #
+        age_at_onset = coalesce(age_at_onset, calculated_age_from_date_of_onset),
+        age_at_death = coalesce(age_at_death, calculated_age_from_date_of_death),
+        age_at_diagnosis = coalesce(age_at_diagnosis, calculated_age_from_date_of_diagnosis),
+        age_at_gastrostomy = coalesce(age_at_gastrostomy, calculated_age_from_date_of_gastrostomy),
+        age_at_23h_niv = coalesce(age_at_23h_niv, calculated_age_from_date_of_23h_niv),
+        age_at_niv = coalesce(age_at_niv, calculated_age_from_date_of_niv),
+        age_at_tracheostomy = coalesce(age_at_tracheostomy, calculated_age_from_date_of_tracheostomy),
+        age_at_transfer = coalesce(
+            age_at_transfer,
+            calculated_age_from_date_of_transfer
+        ),
+        age_at_last_follow_up = coalesce(
+            age_at_last_follow_up,
+            calculated_age_from_date_of_last_follow_up
         ),
         bulbar_onset = site_of_onset %in% c(
             "Bulbar", "Bulbaire", "Bulbar and Spinal",
