@@ -13,9 +13,9 @@ ext_main <- ext_load(
         "numeric", # Age
         "text", # First Symptom
         "text", # Site of Onset
-        "skip", # Site of Onset 2
-        "skip", # Site of Onset 3
-        "skip", # Site of Onset 4
+        "text", # Site of Onset 2
+        "text", # Site of Onset 3
+        "text", # Site of Onset 4
         "text", # Side of Onset
         "date", # Date of Onset
         "date", # Month of Onset
@@ -80,14 +80,12 @@ ext_main <- ext_load(
         across(c(gastrostomy, niv, tracheostomy), ext_parse_boolean),
         sex = case_match(
             sex,
-            c("Man", "Male") ~ "M",
-            c("Woman", "Female") ~ "F",
+            c("Man", "Male") ~ "Male",
+            c("Woman", "Female") ~ "Female",
         ),
         date_of_birth = coalesce(
             date_of_birth,
-            make_date(
-                str_extract(year_year_and_month_of_birth, "\\d{4}"), 1, 1
-            ),
+            make_date(str_extract(year_year_and_month_of_birth, "\\d{4}"), 1, 1),
             make_date(
                 str_extract(year_year_and_month_of_birth, "(\\d{4})-\\d{1,2}", group = 1),
                 str_extract(year_year_and_month_of_birth, "\\d{4}-(\\d{1,2})", group = 1),
@@ -105,10 +103,9 @@ ext_main <- ext_load(
         #    calculated_age_col <- str_glue("calculated_age_from_date_of_{event}")
         #    coalesce(x, .data[[calculated_age_col]])
         # }, .names = "coalesced_{.col}"),
-        #
-        age_at_onset = coalesce(age_at_onset, calculated_age_from_date_of_onset),
-        age_at_death = coalesce(age_at_death, calculated_age_from_date_of_death),
-        age_at_diagnosis = coalesce(age_at_diagnosis, calculated_age_from_date_of_diagnosis),
+        age_at_onset = coalesce(calculated_age_at_onset, age_at_onset, calculated_age_from_date_of_onset),
+        age_at_death = coalesce(calculated_age_at_death, age_at_death, calculated_age_from_date_of_death),
+        age_at_diagnosis = coalesce(calculated_age_at_diagnosis, age_at_diagnosis, calculated_age_from_date_of_diagnosis),
         age_at_gastrostomy = coalesce(age_at_gastrostomy, calculated_age_from_date_of_gastrostomy),
         age_at_23h_niv = coalesce(age_at_23h_niv, calculated_age_from_date_of_23h_niv),
         age_at_niv = coalesce(age_at_niv, calculated_age_from_date_of_niv),

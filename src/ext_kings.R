@@ -22,8 +22,9 @@ ext_kings <- ext_alsfrs |>
             gastrostomy == FALSE ~ FALSE,
         ),
         kings = case_when(
-            q10_dyspnea == 0 | q12_respiratory_insufficiency < 4 ~ "4B",
-            peg_carrier == TRUE ~ "4A",
+            q10_dyspnea == 0 ~ 4,
+            q12_respiratory_insufficiency < 4 ~ 4,
+            peg_carrier == TRUE ~ 4,
             peg_carrier == FALSE ~ {
                 bulbar <- any(c(q1_speech, q2_salivation, q3_swallowing) < 4)
                 upper <- any(c(
@@ -32,7 +33,7 @@ ext_kings <- ext_alsfrs |>
                     q5x_cutting_food_with_gastrostomy_status_unknown
                 ) < 4)
                 lower <- q8_walking < 4
-                as.character(bulbar + upper + lower)
+                bulbar + upper + lower
             }
         ),
     ) |>
