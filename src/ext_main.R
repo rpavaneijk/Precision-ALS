@@ -2,8 +2,8 @@ library(lubridate)
 
 source("src/ext_common.R")
 
-ext_main <- ext_read(
-    "data/P-ALS_Ext_Main_Data_File.xlsx",
+ext_main <- ext_load(
+    "P-ALS_Ext_Main_Data_File.xlsx",
     col_types = c(
         "text", # ID
         "text", # Site
@@ -75,15 +75,22 @@ ext_main <- ext_read(
     rename_with(\(x) str_replace(x, "rilzole", "riluzole")) |>
     mutate(
         across(ends_with("_tested"), ext_parse_boolean),
+        across(c(gastrostomy, niv, tracheostomy), ext_parse_boolean),
         sex = case_match(
             sex,
             c("Man", "Male") ~ "M",
             c("Woman", "Female") ~ "F",
         ),
-        year_of_birth = coalesce(
-            year(date_of_birth),
-            as.integer(str_extract(year_year_and_month_of_birth, "\\d{4}")),
-            as.integer(str_extract(year_year_and_month_of_birth, "(\\d{4})-\\d{1,2}", group = 1))
+        date_of_birth = coalesce(
+            date_of_birth,
+            make_date(
+                str_extract(year_year_and_month_of_birth, "\\d{4}"), 1, 1
+            ),
+            make_date(
+                str_extract(year_year_and_month_of_birth, "(\\d{4})-\\d{1,2}", group = 1),
+                str_extract(year_year_and_month_of_birth, "\\d{4}-(\\d{1,2})", group = 1),
+                1
+            )
         ),
         bulbar_onset = site_of_onset %in% c(
             "Bulbar", "Bulbaire", "Bulbar and Spinal",

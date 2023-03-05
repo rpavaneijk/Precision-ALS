@@ -2,8 +2,10 @@ library(readxl)
 library(dplyr)
 library(stringr)
 
-ext_read <- function(path, ...) {
-    read_excel(path, na = c("Missing", "N/A", "NA", "Unknown"), ...)
+ext_load <- function(path, ...) {
+    read_excel(file.path("data", path), na = c(
+        "Missing", "N/A", "NA", "Unknown"
+    ), ...)
 }
 
 ext_normalize_names <- function(xs) {
