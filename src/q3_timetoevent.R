@@ -26,8 +26,9 @@ ext_fit_survival_curves <- function(data, origin, events, groups = NULL) {
 
             for (g in groups) {
                 key <- str_glue("{e}_from_{o}_by_{g}")
-                group_data <- event_data |> mutate(group = .data[[g]])
-                res[[key]] <- surv_fit(Surv(time, event) ~ group, data = group_data)
+                group_data <- event_data |> mutate("{g}" := .data[[g]])
+                formula <- as.formula(str_glue("Surv(time, event) ~ {g}"))
+                res[[key]] <- surv_fit(formula, data = group_data)
             }
         }
     }
