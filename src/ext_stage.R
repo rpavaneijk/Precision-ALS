@@ -8,8 +8,8 @@ ext_mitos <- ext_alsfrs |>
     transmute(
         id = id,
         date_of_assessment = date_of_assessment,
-        age_of_assessment = coalesce(
-            age_of_assessment, (date_of_assessment - date_of_birth) / dyears(1)
+        age_at_assessment = coalesce(
+            age_at_assessment, (date_of_assessment - date_of_birth) / dyears(1)
         ),
         mitos = {
             walking_selfcare <- q8_walking <= 1 | q6_dressing_and_hygiene <= 1
@@ -28,26 +28,26 @@ time_to_mitos_by_age <-
     bind_rows(ext_mitos) |>
     select(-date_of_assessment) |>
     slice_min(
-        age_of_assessment,
+        age_at_assessment,
         by = c(id, mitos),
         n = 1,
         with_ties = FALSE
     ) |>
     group_by(id) |>
     arrange(mitos, .by_group = TRUE) |>
-    fill(age_of_assessment, .direction = "up") |>
+    fill(age_at_assessment, .direction = "up") |>
     ungroup() |>
     pivot_wider(
         names_from = mitos,
         names_prefix = "age_at_mitos_",
-        values_from = age_of_assessment
+        values_from = age_at_assessment
     )
 
 ext_kings <- ext_alsfrs |>
     left_join(ext_main, by = "id") |>
     mutate(
-        age_of_assessment = coalesce(
-            age_of_assessment, (date_of_assessment - date_of_birth) / dyears(1),
+        age_at_assessment = coalesce(
+            age_at_assessment, (date_of_assessment - date_of_birth) / dyears(1),
         ),
         has_gastrostomy = case_when(
             !is.na(q5a_cutting_food_without_gastrostomy) &
@@ -57,9 +57,9 @@ ext_kings <- ext_alsfrs |>
                 is.na(q5a_cutting_food_without_gastrostomy) &
                 is.na(q5x_cutting_food_with_gastrostomy_status_unknown) ~ TRUE,
             gastrostomy == TRUE & date_of_assessment >= date_of_gastrostomy ~ TRUE,
-            gastrostomy == TRUE & age_of_assessment >= age_at_gastrostomy ~ TRUE,
+            gastrostomy == TRUE & age_at_assessment >= age_at_gastrostomy ~ TRUE,
             gastrostomy == TRUE & date_of_assessment < date_of_gastrostomy ~ FALSE,
-            gastrostomy == TRUE & age_of_assessment < age_at_gastrostomy ~ FALSE,
+            gastrostomy == TRUE & age_at_assessment < age_at_gastrostomy ~ FALSE,
             gastrostomy == FALSE ~ FALSE,
         ),
         kings = case_when(
@@ -78,7 +78,7 @@ ext_kings <- ext_alsfrs |>
             }
         ),
     ) |>
-    select(id, date_of_assessment, age_of_assessment, kings) |>
+    select(id, date_of_assessment, age_at_assessment, kings) |>
     drop_na(id, kings)
 
 time_to_kings_by_age <-
@@ -88,16 +88,16 @@ time_to_kings_by_age <-
     bind_rows(ext_kings) |>
     select(-date_of_assessment) |>
     slice_min(
-        age_of_assessment,
+        age_at_assessment,
         by = c(id, kings),
         n = 1,
         with_ties = FALSE
     ) |>
     group_by(id) |>
     arrange(kings, .by_group = TRUE) |>
-    fill(age_of_assessment, .direction = "up") |>
+    fill(age_at_assessment, .direction = "up") |>
     pivot_wider(
         names_from = kings,
         names_prefix = "age_at_kings_",
-        values_from = age_of_assessment
+        values_from = age_at_assessment
     )

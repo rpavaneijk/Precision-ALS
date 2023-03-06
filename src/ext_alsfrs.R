@@ -12,4 +12,5 @@ ext_alsfrs <- suppressWarnings(ext_load(
 )) |>
     ext_normalize_names() |>
     rename_with(\(x) str_replace(x, "x(\\d+[abx]?)_", "q\\1_")) |>
-    rename_with(\(x) str_replace_all(x, "hygine", "hygiene"))
+    rename_with(\(x) str_replace_all(x, "hygine", "hygiene")) |>
+    rename(age_at_assessment = "age_of_assessment")
