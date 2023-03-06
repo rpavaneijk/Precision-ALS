@@ -94,5 +94,6 @@ for (key in names(time_to_event)) {
             xlab = "Time (years)", ylab = "Survival probability"
         )
     }
-    ggsave(str_glue("output/{key}.png"))
+    dir.create("output/q3", showWarnings = FALSE)
+    ggsave(str_glue("output/q3/{key}.png"))
 }
