@@ -12,6 +12,12 @@
 #### SOM comment - just wondering what you do for C9 status? The TRICALS beta profile seems to have slightly different betas
 #### than the one I use, is this a version of the model without the C9 status?
 
+#RMCF Comment - I see what you mean, the Lancet paper includes the C9 status and this model 
+#doesn't, this is the code we use for selection in clinical trials currently, maybe they dropped
+#c9 status recently - either way I would prefer not to use this model because of the breathing 
+#being so unstandardised in deciding between fast/slow progression - Thank you for adding your code! 
+
+
 ## Create data from input parameters:
 D <- data.frame (AGE_ONSET = as.numeric (as.Date (onset) - as.Date (birth))/365.25,
                  DISDUR = (as.numeric (as.Date (date) - as.Date (onset))/365.25)*12,
@@ -42,6 +48,8 @@ if (D$LP >= lb & D$LP <= ub){"ELIGIBLE"}else{"NOT ELIGIBLE"}
 ##### I don't mind how we put it together but just adding for now
 ##### If we want to go down this route I also have code to impute some variables (eg C9 status) and then combine
 ##### survival probabilities using multiple imputation rules (Rubin's rules)
+
+#Your code looks nicer!
 
 # FUNCTION SURVIVAL TIME BASED ON ENCALS MODEL
 
