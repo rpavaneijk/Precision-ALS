@@ -2,6 +2,17 @@ library(writexl)
 
 source("src/ext_main.R")
 
+last_follow_up_after_death <- ext_main |>
+    select(
+        site, id,
+        date_of_last_follow_up, age_at_last_follow_up,
+        date_of_death, age_at_death
+    ) |>
+    filter(
+        age_at_last_follow_up > age_at_death |
+            date_of_last_follow_up > date_of_death
+    )
+
 gastrostomy_after_death <- ext_main |>
     select(
         site, id,
@@ -34,6 +45,7 @@ niv_after_death <- ext_main |>
 
 dir.create("output/qc", showWarnings = FALSE)
 write_xlsx(list(
+    "Last follow-up" = last_follow_up_after_death,
     "Gastrostomy" = gastrostomy_after_death,
     "NIV" = niv_after_death,
     "Tracheostomy" = tracheostomy_after_death
