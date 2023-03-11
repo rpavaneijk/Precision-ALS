@@ -31,7 +31,8 @@ gastrostomy_after_death <- ext_main |>
         date_of_death, age_at_death
     ) |>
     filter(
-        age_at_gastrostomy > age_at_death | date_of_gastrostomy > date_of_death
+        age_at_gastrostomy > age_at_death |
+            date_of_gastrostomy > date_of_death
     )
 
 tracheostomy_after_death <- ext_main |>
@@ -41,7 +42,8 @@ tracheostomy_after_death <- ext_main |>
         date_of_death, age_at_death
     ) |>
     filter(
-        age_at_tracheostomy > age_at_death | date_of_tracheostomy > date_of_death
+        age_at_tracheostomy > age_at_death |
+            date_of_tracheostomy > date_of_death
     )
 
 niv_after_death <- ext_main |>
@@ -51,7 +53,8 @@ niv_after_death <- ext_main |>
         date_of_death, age_at_death
     ) |>
     filter(
-        age_at_niv > age_at_death | date_of_niv > date_of_death
+        age_at_niv > age_at_death |
+            date_of_niv > date_of_death
     )
 
 dir.create("output/qc", showWarnings = FALSE)
