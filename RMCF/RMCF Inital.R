@@ -71,9 +71,7 @@ ext_main <- ext_load(
     "text" # Current Working Status
   ))
 ext_main <- ext_normalize_names(ext_main)
-ext_main <- ext_parse_boolean(ext_main) #Something wrong here
 ext_main$site_of_onset <- as.factor(ext_main$site_of_onset)
-
 unique(ext_main$site_of_onset)
 
 ext_main <- ext_main %>% 
