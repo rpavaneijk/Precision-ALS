@@ -19,8 +19,9 @@ filter(site != 'Karolinsk') %>%
          geom_histogram() +
   facet_wrap(~site)
 
-#Add a median v line
+#Violins work better
 ext_main %>% 
-  ggplot(aes(x = calculated_age_at_diagnosis, fill = site)) +
-  geom_histogram()
+  filter(site != 'Karolinsk') %>% 
+  ggplot(aes(x= site, y= calculated_age_at_diagnosis, fill = site)) + 
+  geom_violin()
  
