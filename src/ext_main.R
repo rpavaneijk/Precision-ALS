@@ -96,6 +96,9 @@ ext_main <- ext_load(
             \(x) (x - date_of_birth) / dyears(1),
             .names = "calculated_age_from_{.col}"
         ),
+        calculated_age_from_date_of_transfer = if_else(
+            vital_status == "Alive", calculated_age_from_date_of_transfer, NA_real_
+        ),
         # BUG: for some reason this doesn't work...
         #
         # across(starts_with("age_at_"), \(x) {
@@ -110,10 +113,7 @@ ext_main <- ext_load(
         age_at_23h_niv = coalesce(age_at_23h_niv, calculated_age_from_date_of_23h_niv),
         age_at_niv = coalesce(age_at_niv, calculated_age_from_date_of_niv),
         age_at_tracheostomy = coalesce(age_at_tracheostomy, calculated_age_from_date_of_tracheostomy),
-        age_at_transfer = coalesce(
-            age_at_transfer,
-            calculated_age_from_date_of_transfer
-        ),
+        age_at_transfer = coalesce(age_at_transfer, calculated_age_from_date_of_transfer),
         age_at_last_follow_up = coalesce(
             age_at_last_follow_up,
             calculated_age_from_date_of_last_follow_up
