@@ -83,22 +83,16 @@ D[D$ID == "BEL-0596" & D$TIME == 0, ]$TOTAL <- 42
 
 
 ### Sarah data edits
-## BEL-0353 final 3 items on respiratory ??
-D[(D$ID == "BEL-0353" & D$DATE == "2009-05-14"), ]
 
-## BEL-0350 final 3 items on respiratory - could be zeros not 4s?
-D[(D$ID == "BEL-0350" & D$DATE == "2016-02-25"), ]
+D[!(D$ID == "BEL-0353" & D$DATE == "2009-05-14"), ]
+D[!(D$ID == "BEL-0353" & D$DATE == "2009-08-06"), ]
+D[!(D$ID == "BEL-0530" & D$DATE == "2015-06-04"), ]
 
 D[(D$ID == "BEL-0535" & D$DATE == "2013-11-29"), ]$DATE <- "2012-11-29"
 
-### Not sure? this person going up and down
-D[(D$ID == "BEL-1013" & D$DATE == "2015-04-21"), ]$DATE <- 
-  
-
+### BEL-1013 this person going up and down
 D[(D$ID == "BEL-1098" & D$DATE == "2018-01-22"), ]$DATE <- "2019-01-22"
 D[(D$ID == "BEL-1447" & D$DATE == "2021-04-15"), ]$DATE <- "2020-04-15"
-
-
 
 D[(D$ID == "SHE-0094" & D$DATE == "2016-10-05"), ]$I12 <- 4
 D[(D$ID == "SHE-0156" & D$DATE == "2011-07-11"), ]$DATE <- "2012-07-11"
@@ -108,12 +102,58 @@ D[(D$ID == "SHE-0228" & D$DATE == "2009-09-14"), ]$DATE <- "2008-09-14"
 D[(D$ID == "SHE-0343" & D$DATE == "2014-07-23"), ]$DATE <- "2015-07-23"
 D[(D$ID == "SHE-0508" & D$DATE == "2014-10-08"), ]$DATE <- "2015-10-08"
 
-## year is likely wrong but don't know in which direction should change
-## need year diagnosis/death/onset
-D[(D$ID == "SHE-0589" & D$DATE == ""), ]
+## Based on date of diagnosis/death from main file
+D[(D$ID == "SHE-0589" & D$DATE == "2013-05-22"), ]$DATE <- "2012-05-22"
 
-## possibly just missing values for respiratory assessment
-D[(D$ID == "SHE-0867" & D$DATE == ""), ]
+D[!(D$ID == "SHE-0867" & D$DATE == "2017-07-26"), ]
+D[!(D$ID == "SHE-0871" & D$DATE == "2011-03-16"), ]
+D[!(D$ID == "SHE-0871" & D$DATE == "2011-09-22"), ]
+D[!(D$ID == "SHE-1220" & D$DATE == "2019-11-12"), ]
+D[!(D$ID == "SHE-1313" & D$DATE == "2018-03-13"), ]
+D[(D$ID == "SHE-1341" & D$DATE == "2020-01-22"), ]$DATE <- "2019-01-22"
+D[!(D$ID == "SPA-0008" & D$DATE == "2017-12-01"), ]
+D[!(D$ID == "SPA-0025" & D$DATE == "2021-11-02"), ]
+D[!(D$ID == "SPA-0046" & D$DATE == "2017-10-06"), ]
+D[!(D$ID == "SPA-0068" & D$DATE == "2017-06-09"), ]
+D[!(D$ID == "SPA-0068" & D$DATE == "2019-03-22"), ]
+
+## SPA-0070 checked but the numbers are all over the place generally, not sure what to exclude/change
+
+D[!(D$ID == "SPA-0070" & D$DATE == "2018-11-16"), ]
+D[!(D$ID == "SPA-0083" & (D$DATE == "2018-02-02" | D$DATE =="2018-06-08" | D$DATE == "2018-10-19")), ]
+D[!(D$ID == "SPA-0097" & D$DATE == "2020-10-06"), ]
+D[!(D$ID == "SPA-0189" & D$DATE == "2016-12-16"), ]
+
+## SPA-0305 person appears to be getting better and then worse throughout
+
+D[(D$ID == "SPA-0361" & D$DATE == "2019-02-19"), ]$DATE <- "2020-02-19"
+
+## SPA-0391 - 2019-02-15 probably not wrong year, might be genuine increase
+D[!(D$ID == "SPA-0391" & D$DATE == "2017-03-24"), ]
+D[!(D$ID == "SPA-0418" & D$DATE == "2018-04-27"), ]
+D[!(D$ID == "SPA-0466" & D$DATE == "2022-01-18"), ]
+
+## SPA-0480 think it is a genuine rapid drop
+
+D[!(D$ID == "SPA-0488" & D$DATE == "2019-02-15"), ]
+D[(D$ID == "SPA-0673" & D$DATE == "2020-04-23"), ]$DATE <- "2019-04-23" 
+D[!(D$ID == "SPA-0698" & D$DATE == "2020-10-30"), ]
+D[!(D$ID == "SPA-0762" & D$DATE == "2021-06-04"), ]
+
+D[!(D$ID == "SWE-0114" & (D$DATE == "2017-11-06"| 
+                            D$DATE == "2019-06-13"| 
+                            D$DATE == "2020-02-03"| 
+                            D$DATE == "2020-08-13"| 
+                            D$DATE == "2020-11-03"| 
+                            D$DATE == "2021-03-29"| 
+                            D$DATE == "2021-07-01")), ]
+
+D[(D$ID == "SWE-0243" & D$DATE == "2021-12-31"), ]$DATE <- "2020-12-31" 
+D[!(D$ID == "SWE-0263" & D$DATE == "2017-12-01"), ]
+D[(D$ID == "SWE-0270" & D$DATE == "2019-02-02"), ]$DATE <- "2020-02-02"
+D[(D$ID == "SWE-0283" & D$DATE == "2018-09-09"), ]$DATE <- "2019-09-09"
+D[(D$ID == "SWE-0331" & D$DATE == "2016-11-07"), ]$DATE <- "2017-11-07"
+D[!(D$ID == "SWE-0355" & D$DATE == "2022-04-20"), ]
 
 #. Visual check data
 ggplot (D[D$TIME < 13.5, ], aes (TIME, TOTAL, by = ID)) + geom_line (alpha = .1)
