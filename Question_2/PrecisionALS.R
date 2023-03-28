@@ -1,9 +1,9 @@
 #### Precision ALS ####
 source ("https://raw.githubusercontent.com/rpavaneijk/Basics/master/Source_Basics.R")
-#D <- read.xlsx ("/Users/rpavaneijk/SurfDrive/Statistics/Data/Precision ALS/P-ALS_Ext_ALSFRS-R.xlsx",
-               # detectDates = F)
+D <- read.xlsx('/Users/daphneweemering/surfdrive/data/precision/P-ALS_Ext_ALSFRS-R.xlsx', 
+               detectDates = F)
 
-D <- read.xlsx("P-ALS_Ext_ALSFRS-R.xlsx", detectDates = F)
+#D <- read.xlsx("P-ALS_Ext_ALSFRS-R.xlsx", detectDates = F)
 
 #. Rename cols
 D <- rn (D, 
@@ -155,8 +155,69 @@ D[(D$ID == "SWE-0283" & D$DATE == "2018-09-09"), ]$DATE <- "2019-09-09"
 D[(D$ID == "SWE-0331" & D$DATE == "2016-11-07"), ]$DATE <- "2017-11-07"
 D[!(D$ID == "SWE-0355" & D$DATE == "2022-04-20"), ]
 
+
+## Addition Daphne
+D <- D[!(D$ID == 'IRE-2352' & D$DATE == '2002-09-25'), ]
+
+D <- D[!D$ID == 'NLD-0327', ]
+D <- D[!D$ID == 'NLD-2208',]
+D <- D[!D$ID == 'NLD-2383', ]
+D <- D[!D$ID == 'NLD-2403', ]
+D <- D[!D$ID == 'NLD-2917', ]
+D <- D[!(D$ID == 'NLD-0592' & D$AGE == '44.11'), ]
+D <- D[!(D$ID == 'NLD-1690' & D$AGE == '47.81'), ] 
+D <- D[!(D$ID == 'NLD-1814' & D$AGE == '54.91'), ] 
+D <- D[!(D$ID == 'NLD-1822' & D$AGE == '55.07'), ]
+D <- D[!(D$ID == 'NLD-1890' & D$AGE == '62.67'), ] 
+D <- D[!(D$ID == 'NLD-2022' & D$AGE == '57.59'), ] 
+D <- D[!(D$ID == 'NLD-2097' & D$AGE == '47.78'), ] 
+D <- D[!(D$ID == 'NLD-2316' & D$AGE == '72.45'), ] 
+D <- D[!(D$ID == 'NLD-2366' & D$AGE == '69.61'), ] 
+D <- D[!(D$ID == 'NLD-2473' & D$AGE == '64.66'), ]
+D <- D[!(D$ID == 'NLD-2540' & D$AGE == '52.85'), ]
+D <- D[!(D$ID == 'NLD-2731' & D$AGE == '76'), ]
+D <- D[!(D$ID == 'NLD-2765' & D$AGE == '74.25'), ] 
+D <- D[!(D$ID == 'NLD-2786' & D$TOTAL == '43'), ] 
+D <- D[!(D$ID == 'NLD-2828' & D$AGE == '72.23'), ]
+D <- D[!(D$ID == 'NLD-2946' & D$AGE == '72.98'), ]
+D <- D[!(D$ID == 'NLD-2682' & (D$AGE == '58.90' |  D$AGE == '59.31' | D$AGE == '59.04')), ] 
+D <- D[!(D$ID == 'NLD-2798' & (D$AGE == '69.32' | D$AGE == '69.3' | D$AGE == '69.23')), ]
+D <- D[!(D$ID == 'NLD-2861' & (D$AGE == '40' | D$AGE == '62.69' | D$AGE == '62.77')), ]
+D <- D[!(D$ID == 'NLD-2864' & (D$AGE == '71.21' | D$AGE == '71.3')), ]
+D <- D[!(D$ID == 'NLD-2919' & (D$AGE == '55.01' | D$AGE == '55.12' | D$TOTAL == '41')), ] 
+D <- D[!(D$ID == 'NLD-2950' & (D$AGE == '58.23' | D$AGE == '58.24')), ]
+D <- D[!(D$ID == 'NLD-2964' & D$AGE == '46.26'), ]
+D[(D$ID == 'NLD-0979' & D$AGE == '74.18'), ]$AGE <- 73.18
+D[(D$ID == 'NLD-1073' & D$AGE == '77.11'), ]$AGE <- 76.11
+D[(D$ID == 'NLD-1556' & D$AGE == '59.77'), ]$AGE <- 60.77
+D[(D$ID == 'NLD-1999' & D$AGE == '72.72'), ]$AGE <- 71.72
+D[(D$ID == 'NLD-2188' & D$AGE == '52.71'), ]$AGE <- 51.71
+D[(D$ID == 'NLD-2275' & D$AGE == '70.34'), ]$AGE <- 71.34
+D[(D$ID == 'NLD-2349' & D$AGE == '77.4'), ]$AGE <- 76.4
+D[(D$ID == 'NLD-2807' & D$AGE == '67.59'), ]$AGE <- 68.59
+D[(D$ID == 'NLD-2847' & D$AGE == '68.59'), ]$AGE <- 67.59
+D[(D$ID == 'NLD-2919' & D$AGE == '54.39'),]$AGE <- 55.39
+D[(D$ID == 'NLD-2955' & D$AGE == '69'), ]$AGE <- 70
+D[(D$ID == 'NLD-2759' & D$AGE == '47.29'), ]$TOTAL <- 43
+
+
 #. Visual check data
 ggplot (D[D$TIME < 13.5, ], aes (TIME, TOTAL, by = ID)) + geom_line (alpha = .1)
+
+#. Redo time:
+D$TIME <- unlist (by (D, D$ID, function (d){
+  
+  # Select or Age or Date to calculate time difference since first measurement
+  if (any (is.na (d$DATE))){ 
+    if (all (is.na (d$DATE))) {
+      (as.numeric(d$AGE) - min (as.numeric(d$AGE))) * 12
+    } else {
+      rep (NA, nrow (d))
+    }
+  } else {
+    as.numeric (d$DATE - min (d$DATE)) / (365.25/12)
+  }
+}))
 
 #. Calculate difference between observations
 D <- D[order (D$ID, D$TIME), ]
