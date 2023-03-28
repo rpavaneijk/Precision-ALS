@@ -2,6 +2,17 @@ library(writexl)
 
 source("src/ext_main.R")
 
+diagnosis_before_onset <- ext_main |>
+    select(
+        site, id,
+        date_of_diagnosis, age_at_diagnosis,
+        date_of_onset, age_at_onset
+    ) |>
+    filter(
+        age_at_diagnosis < age_at_onset |
+            date_of_diagnosis < date_of_onset
+    )
+
 gastrostomy_before_onset <- ext_main |>
     select(
         site, id,
@@ -34,6 +45,7 @@ niv_before_onset <- ext_main |>
 
 dir.create("output/qc", showWarnings = FALSE)
 write_xlsx(list(
+    "Diagnosis" = diagnosis_before_onset,
     "Gastrostomy" = gastrostomy_before_onset,
     "NIV" = niv_before_onset,
     "Tracheostomy" = tracheostomy_before_onset
